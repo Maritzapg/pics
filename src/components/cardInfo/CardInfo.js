@@ -11,10 +11,11 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
+//import FavoriteIcon from '@material-ui/icons/Favorite';
+//import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
     card: {
@@ -44,14 +45,58 @@ const styles = theme => ({
     avatar: {
         backgroundColor: red[500],
     },
+    textField: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        width: 200,
+    },
 });
 
 class CardInfo extends React.Component {
-    state = { expanded: false };
+    constructor() {
+        super();
+        this.state = {expanded: false, name: ''};
+    }
 
     handleExpandClick = () => {
         this.setState(state => ({ expanded: !state.expanded }));
     };
+
+    handleChange = name => event => {
+        this.setState({
+            [name]: event.target.value,
+        });
+    };
+
+    onPressEnter(event)
+    {
+        if (event.key === 'Enter') { this.props.submitComment(this.state.name) }
+    }
+
+    renderComments = () =>
+    {
+        const {comments} = this.props.picture
+
+        if(comments)
+        {
+            return(
+                <div>
+                    {
+                        Object.keys(comments).map((key, i) =>
+                        {
+                            return (
+                                <CardContent key={i} style={{paddingTop:0, paddingBottom:0}}>
+                                    <Typography paragraph>
+                                        <strong>{comments[key].user.userName}  </strong>{comments[key].comment}
+                                    </Typography>
+                                </CardContent>
+                            )
+                        }).reverse()
+                    }
+                </div>
+            )
+        }
+    }
 
     render() {
         const { classes } = this.props;
@@ -60,7 +105,7 @@ class CardInfo extends React.Component {
             <Card className={classes.card}>
                 <CardHeader
                     avatar={
-                        <Avatar aria-label="Recipe" className={classes.avatar} src={this.props.picture.photoURL}>
+                        <Avatar aria-label="Recipe" className={classes.avatar} src={this.props.picture.user.photoURL}>
                             R
                         </Avatar>
                     }
@@ -69,8 +114,8 @@ class CardInfo extends React.Component {
                             <MoreVertIcon />
                         </IconButton>
                     }
-                    title={this.props.picture.displayName}
-                    subheader="September 14, 2016"
+                    title={this.props.picture.user.displayName}
+                    subheader={(this.props.picture.upload_date)}
                 />
                 <CardMedia
                     className={classes.media}
@@ -79,17 +124,35 @@ class CardInfo extends React.Component {
                 />
                 <CardContent>
                     <Typography component="p">
-                        This impressive paella is a perfect party dish and a fun meal to cook together with your
-                        guests. Add 1 cup of frozen peas along with the mussels, if you like.
+                        <TextField
+                            id="standard-full-width"
+                            //label="Label"
+                            style={{ margin: 8 }}
+                            placeholder="Agregar un comentario"
+                            //helperText="Full width!"
+                            fullWidth
+                            onChange={this.handleChange('name')}
+                            onKeyPress={(ev) => {
+                                if (ev.key === 'Enter') {
+                                    ev.preventDefault()
+                                    this.onPressEnter(ev)
+                                }
+                            }}
+                            margin="normal"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.actions} disableActionSpacing>
-                    <IconButton aria-label="Add to favorites">
-                        <FavoriteIcon />
+                    <IconButton aria-label="Add to favorites" onClick={this.handleExpandClick}>
+                        {/*<FavoriteIcon />*/}
+                        Comentarios
                     </IconButton>
-                    <IconButton aria-label="Share">
+                    {/*<IconButton aria-label="Share">
                         <ShareIcon />
-                    </IconButton>
+                    </IconButton>*/}
                     <IconButton
                         className={classnames(classes.expand, {
                             [classes.expandOpen]: this.state.expanded,
@@ -102,13 +165,7 @@ class CardInfo extends React.Component {
                     </IconButton>
                 </CardActions>
                 <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-                    <CardContent>
-                        <Typography paragraph>Method:</Typography>
-                        <Typography paragraph>
-                            Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                            minutes.
-                        </Typography>
-                    </CardContent>
+                    {this.renderComments()}
                 </Collapse>
             </Card>
         );

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Menu from './../components/menu/Menu'
 import LandingPage from './landing/Landing';
@@ -10,7 +10,7 @@ import AccountPage from './account/Account';
 
 import * as routes from '../constants/routes';
 
-import firebase from 'firebase';
+//import firebase from 'firebase';
 //import UploadFile from './uploadFile/UploadFile'
 import './App.css';
 import withAuthentication from './withAuthentication/WithAuthentication';

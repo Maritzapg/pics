@@ -53,12 +53,6 @@ const NavigationAuth = () =>
             </Toolbar>
         </AppBar>
     </div>
-    {/*<Menu>
-        <li><Link to={routes.LANDING}>Landing</Link></li>
-        <li><Link to={routes.HOME}>Home</Link></li>
-        <li><Link to={routes.ACCOUNT}>Account</Link></li>
-        <li><SignOutButton /></li>
-    </Menu>*/}
 
 const NavigationNonAuth = () =>
     <div style={styles.root}>
@@ -74,20 +68,5 @@ const NavigationNonAuth = () =>
             </Toolbar>
         </AppBar>
     </div>
-    {/*<ul>
-        <li><Link to={routes.LANDING}>Landing</Link></li>
-        <li><Link to={routes.SIGN_IN}>Sign In</Link></li>
-    </ul>*/}
-
-/*const Menu = () =>
-    <div>
-        <ul>
-            <li><Link to={routes.SIGN_IN}>Sign In</Link></li>
-            <li><Link to={routes.LANDING}>Landing</Link></li>
-            <li><Link to={routes.HOME}>Home</Link></li>
-            <li><Link to={routes.ACCOUNT}>Account</Link></li>
-            <li><SignOutButton /></li>
-        </ul>
-    </div>*/
 
 export default Menu;

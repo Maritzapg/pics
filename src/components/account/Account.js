@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import UploadFile from './../uploadFile/UploadFile'
-import AuthUserContext from './../../AuthUserContext';
+//import AuthUserContext from './../../AuthUserContext';
 import CardInfo from './../cardInfo/CardInfo'
-import { withStyles } from '@material-ui/core/styles';
+//import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 
 class Account extends Component {
@@ -23,20 +23,33 @@ class Account extends Component {
             this.setState({ user })
         })
 
+        this.getPictures()
+    }
+
+    getPictures()
+    {
         firebase.database().ref('pictures').on('child_added', snapshot => {
-            debugger
+            const picture = {
+                key: snapshot.key,
+                image: snapshot.val().image,
+                upload_date: snapshot.val().upload_date,
+                user: snapshot.val().user,
+                comments: snapshot.val().comments
+            }
             this.setState({
-                pictures: this.state.pictures.concat(snapshot.val())
+                pictures: this.state.pictures.concat(picture)
             })
         })
     }
 
     handleUpload(event)
     {
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        let today  = new Date();
+
         const file = event.target.files[0]
         const storageRef = firebase.storage().ref(`/photos/${file.name}`)
         const task = storageRef.put(file);
-        let downloadUrl
 
         task.on('state_changed', snapshot => {
                 let percentaje = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
@@ -45,11 +58,17 @@ class Account extends Component {
             }, () => {
                 task.then(snapshot => snapshot.ref.getDownloadURL())
                     .then((url) => {
-                    debugger
+                        const date = today.toLocaleDateString("es", options)
+
                         const  record = {
-                            photoURL: this.state.user.photoURL,
-                            displayName: this.state.user.displayName,
-                            image: url
+                            user:{
+                                photoURL: this.state.user.photoURL,
+                                displayName: this.state.user.displayName,
+                                uid: this.state.user.uid
+                            },
+                            image: url,
+                            upload_date: date,
+                            comments: []
                         }
 
                         const dbRef = firebase.database().ref('pictures')
@@ -61,6 +80,29 @@ class Account extends Component {
             }
 
         )
+    }
+    handleSubmitComment = (comment, picture) =>
+    {
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        let today  = new Date();
+        const date = today.toLocaleDateString("es", options)
+
+        const dbRef = firebase.database().ref('pictures/'+picture.key+'/comments')
+        const record = {
+            user:{
+                userUid: this.state.user.uid,
+                userName: this.state.user.displayName,
+            },
+            comment: comment,
+            date: date
+        }
+        const newComment = dbRef.push()
+        newComment.set(record)
+
+        newComment.then(()=> {
+            this.setState({pictures:[]})
+            this.getPictures()
+        }).catch(console.error);
     }
 
     renderPics()
@@ -74,7 +116,8 @@ class Account extends Component {
                         {
                             return (
                                 <div key={i}>
-                                    <CardInfo picture={picture}/>
+                                    <CardInfo picture={picture} submitComment={comment => this.handleSubmitComment(comment, picture)}/>
+                                    <br/>
                                 </div>
                             )
                         }).reverse()
@@ -97,9 +140,11 @@ class Account extends Component {
                         //className={classNames(classes.avatar, classes.bigAvatar)}
                     />
                     <p>Hola {this.state.user.displayName}</p>
-                    <UploadFile onUpload={this.handleUpload} uploadValue={this.state.uploadValue}/>
 
+                    <UploadFile onUpload={this.handleUpload} uploadValue={this.state.uploadValue}/>
+                    <br/>
                     {this.renderPics()}
+                    <br/>
                 </div>
             );
         }

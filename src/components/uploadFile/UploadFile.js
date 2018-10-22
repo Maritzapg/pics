@@ -12,7 +12,7 @@ class UploadFile extends Component {
     render() {
         return (
             <div>
-                <progress value={this.state.uploadValue} max={100} alt=""/>
+                <progress value={this.props.uploadValue} max={100} alt=""/>
                 <br/>
                 <input type="file" onChange={this.props.onUpload}/>
             </div>
