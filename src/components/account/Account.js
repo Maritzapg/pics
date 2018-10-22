@@ -11,7 +11,10 @@ class Account extends Component {
     constructor() {
         super();
         this.state = {
-            user: null, pictures: [], uploadValue:null
+            user: null,
+            pictures: [
+            ],
+            uploadValue:null
         }
         this.handleUpload = this.handleUpload.bind(this)
     }
@@ -51,20 +54,28 @@ class Account extends Component {
                 });
             });
         })*/
-        //Obtiene fotos
-        firebase.database().ref('pictures').on('child_added', snapshot => {
-            const picture = {
-                key: snapshot.key,
-                image: snapshot.val().image,
-                upload_date: snapshot.val().upload_date,
-                user: snapshot.val().user,
-                comments: snapshot.val().comments
-            }
-            this.setState({
-                pictures: this.state.pictures.concat(picture)
-            })
-        })
+        firebase.auth().onAuthStateChanged(user =>
+        {
+            if(user !== null)
+            {
+                firebase.database().ref('pictures').on('child_added', snapshot => {
 
+                    if(snapshot.val().user.uid === user.uid)
+                    {
+                        const picture = {
+                            key: snapshot.key,
+                            image: snapshot.val().image,
+                            upload_date: snapshot.val().upload_date,
+                            user: snapshot.val().user,
+                            comments: snapshot.val().comments
+                        }
+                        this.setState({
+                            pictures: this.state.pictures.concat(picture)
+                        })
+                    }
+                })
+            }
+        })
     }
 
     handleUpload(event)
@@ -164,7 +175,7 @@ class Account extends Component {
                         style={{width:120, height:120}}
                         //className={classNames(classes.avatar, classes.bigAvatar)}
                     />
-                    <p>Hola {this.state.user.displayName}</p>
+                    <p>Hola, {this.state.user.displayName}</p>
 
                     <UploadFile onUpload={this.handleUpload} uploadValue={this.state.uploadValue}/>
                     <br/>
