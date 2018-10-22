@@ -26,8 +26,32 @@ class Account extends Component {
         this.getPictures()
     }
 
-    getPictures()
+    getPictures = () =>
     {
+        /*firebase.auth().onAuthStateChanged(user =>
+        {
+            this.setState({ user })
+            let query = firebase.database().ref('/pictures').orderByChild('user/uid').equalTo(
+                user.uid
+            );
+            debugger
+
+            query.once( 'value', data => {
+                data.forEach(snapshot => {
+                    const picture = {
+                        key: snapshot.key,
+                        image: snapshot.val().image,
+                        upload_date: snapshot.val().upload_date,
+                        user: snapshot.val().user,
+                        comments: snapshot.val().comments
+                    }
+                    this.setState({
+                        pictures: this.state.pictures.concat(picture)
+                    })
+                });
+            });
+        })*/
+
         firebase.database().ref('pictures').on('child_added', snapshot => {
             const picture = {
                 key: snapshot.key,
@@ -40,6 +64,7 @@ class Account extends Component {
                 pictures: this.state.pictures.concat(picture)
             })
         })
+
     }
 
     handleUpload(event)
