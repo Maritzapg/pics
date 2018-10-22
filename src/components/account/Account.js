@@ -51,7 +51,7 @@ class Account extends Component {
                 });
             });
         })*/
-
+        //Obtiene fotos
         firebase.database().ref('pictures').on('child_added', snapshot => {
             const picture = {
                 key: snapshot.key,
