@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import Menu from './../components/menu/Menu'
 import LandingPage from './landing/Landing';
 //import SignUpPage from './SignUp';
@@ -71,13 +71,15 @@ const App = () =>
     <Router>
         <div>
             <Menu/>
-            <hr/>
-            <Route exact path={routes.LANDING} component={LandingPage}/>
-            {/*<Route exact path={routes.SIGN_UP} component={SignUpPage} />*/}
             <Route exact path={routes.SIGN_IN} component={SignInPage}/>
-            {/*<Route exact path={routes.PASSWORD_FORGET} component={PasswordForgetPage} />*/}
+            {/*<Route exact path={routes.LANDING} component={LandingPage}/>
+            <Route exact path={routes.SIGN_UP} component={SignUpPage} />
+            <Route exact path={routes.SIGN_IN} component={SignInPage}/>
+            <Route exact path={routes.PASSWORD_FORGET} component={PasswordForgetPage} />
             <Route exact path={routes.HOME} component={HomePage}/>
+            <Route exact path={routes.HOME}/>
             <Route exact path={routes.ACCOUNT} component={AccountPage}/>
+            <Route exact path={routes.ACCOUNT}/>*/}
         </div>
     </Router>
 

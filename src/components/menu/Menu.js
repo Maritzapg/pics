@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import NavigationAuth from './NavigationAuth'
 
 const styles = {
     root: {
@@ -33,7 +33,7 @@ const Menu = () =>
         }
     </AuthUserContext.Consumer>
 
-const NavigationAuth = () =>
+/*const NavigationAuth = () =>
     <div style={styles.root}>
         <AppBar position="static">
             <Toolbar>
@@ -52,7 +52,7 @@ const NavigationAuth = () =>
                 <SignOutButton />
             </Toolbar>
         </AppBar>
-    </div>
+    </div>*/
 
 const NavigationNonAuth = () =>
     <div style={styles.root}>

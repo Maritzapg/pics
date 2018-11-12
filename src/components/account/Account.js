@@ -67,6 +67,7 @@ class Account extends Component {
                             image: snapshot.val().image,
                             upload_date: snapshot.val().upload_date,
                             user: snapshot.val().user,
+                            userMail: user.email,
                             comments: snapshot.val().comments
                         }
                         this.setState({
@@ -95,12 +96,14 @@ class Account extends Component {
                 task.then(snapshot => snapshot.ref.getDownloadURL())
                     .then((url) => {
                         const date = today.toLocaleDateString("es", options)
-
+                        let str = this.state.user.email;
+                        let displayName = str.split("@");
                         const  record = {
                             user:{
                                 photoURL: this.state.user.photoURL,
                                 displayName: this.state.user.displayName,
-                                uid: this.state.user.uid
+                                uid: this.state.user.uid,
+                                email: this.state.user.email
                             },
                             image: url,
                             upload_date: date,
@@ -167,6 +170,17 @@ class Account extends Component {
     render() {
         if(this.state.user)
         {
+            /*var user = firebase.auth().currentUser;
+
+            user.updateProfile({
+                displayName: "Maritza Palacios",
+                photoURL: "https://firebasestorage.googleapis.com/v0/b/pics-ec9a0.appspot.com/o/photos%2Fprofiles%2Fandrea-tummons-462085-unsplash.jpg?alt=media&token=14ab7850-587c-44a6-9990-0c92a578ccea"
+            }).then(function() {
+                // Update successful.
+            }).catch(function(error) {
+                // An error happened.
+            });*/
+
             return (
                 <div style={{paddingLeft:'30%'}}>
                     <Avatar

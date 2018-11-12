@@ -111,7 +111,7 @@ class CardInfo extends React.Component {
                     }
                     action={
                         <IconButton>
-                            <MoreVertIcon />
+                            <MoreVertIcon/>
                         </IconButton>
                     }
                     title={this.props.picture.user.displayName}

@@ -14,7 +14,7 @@ class Home extends Component {
     componentWillMount()
     {
         firebase.auth().onAuthStateChanged(user =>
-        {
+        {debugger
             this.setState({ user })
         })
 
@@ -29,6 +29,7 @@ class Home extends Component {
                 image: snapshot.val().image,
                 upload_date: snapshot.val().upload_date,
                 user: snapshot.val().user,
+                userMail: snapshot.val().user.email,
                 comments: snapshot.val().comments
             }
             this.setState({
@@ -44,6 +45,7 @@ class Home extends Component {
         const date = today.toLocaleDateString("es", options)
 
         const dbRef = firebase.database().ref('pictures/'+picture.key+'/comments')
+
         const record = {
             user:{
                 userUid: this.state.user.uid,
